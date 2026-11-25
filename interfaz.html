@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moderador LIVE</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1e222b; --line:#2a2f3a; --txt:#e8eaf0; --mut:#8a91a1;
+    --rojo:#ff3b5c; --rojo-bg:rgba(255,59,92,.12); --amar:#ffc233; --amar-bg:rgba(255,194,51,.10);
+    --verde:#2ed47a; --azul:#25f4ee;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--txt);font:14px/1.4 "Segoe UI",system-ui,sans-serif}
+  header{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line);background:var(--panel);flex-wrap:wrap}
+  .logo{font-weight:700;font-size:16px;letter-spacing:.2px;margin-right:6px}
+  .logo span{color:var(--rojo)}
+  input{background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:9px 12px;border-radius:8px;width:210px;font-size:14px}
+  input:focus{outline:none;border-color:var(--azul)}
+  button{background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:9px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600}
+  button:hover{border-color:#4a5163}
+  button.pri{background:var(--rojo);border-color:var(--rojo);color:#fff}
+  button.pri:hover{filter:brightness(1.1)}
+  button:disabled{opacity:.4;cursor:default}
+  .sp{flex:1}
+  .pill{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border-radius:99px;background:var(--panel2);font-size:12px;font-weight:600}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--mut)}
+  .pill.conectado .dot,.pill.demo .dot{background:var(--verde);box-shadow:0 0 8px var(--verde)}
+  .pill.conectando .dot{background:var(--amar);animation:p 1s infinite}
+  .pill.error .dot{background:var(--rojo)}
+  @keyframes p{50%{opacity:.3}}
+  .msg{padding:8px 18px;color:var(--mut);font-size:13px;border-bottom:1px solid var(--line)}
+  .msg.error{color:var(--rojo)}
+  .stats{display:flex;gap:10px;padding:12px 18px;flex-wrap:wrap}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:130px}
+  .stat b{display:block;font-size:22px}
+  .stat small{color:var(--mut);font-size:12px}
+  .stat.r b{color:var(--rojo)} .stat.a b{color:var(--amar)}
+  main{display:grid;grid-template-columns:1fr 1.15fr .95fr;gap:12px;padding:0 18px 18px;height:calc(100% - 205px);min-height:420px}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;min-height:0}
+  section h2{margin:0;padding:12px 14px;font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--mut);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .lista{overflow-y:auto;flex:1;padding:6px}
+  .c{padding:6px 8px;border-radius:6px;font-size:13px}
+  .c .u{color:var(--azul);font-weight:600}
+  .c .h{color:var(--mut);font-size:11px;margin-right:6px}
+  .c.silenciar{background:var(--amar-bg)}
+  .c.bloquear{background:var(--rojo-bg)}
+  .al{border-left:4px solid var(--amar);background:var(--panel2);border-radius:8px;padding:10px 12px;margin:6px 4px}
+  .al.bloquear{border-left-color:var(--rojo)}
+  .al .top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+  .tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:5px;background:var(--amar);color:#111}
+  .al.bloquear .tag{background:var(--rojo);color:#fff}
+  .al .t{margin:6px 0 4px;font-size:14px}
+  .al .p{color:var(--mut);font-size:12px}
+  .mini{padding:4px 9px;font-size:12px;font-weight:600}
+  .us{display:flex;align-items:center;gap:8px;padding:9px 10px;border-bottom:1px solid var(--line)}
+  .us.hecho{opacity:.35}
+  .us .n{flex:1;min-width:0}
+  .us .n div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .us .n small{color:var(--mut)}
+  .cnt{font-weight:700;font-size:12px;padding:3px 7px;border-radius:5px}
+  .cnt.r{background:var(--rojo-bg);color:var(--rojo)} .cnt.a{background:var(--amar-bg);color:var(--amar)}
+  .vacio{color:var(--mut);text-align:center;padding:30px 10px;font-size:13px}
+  .tools{display:flex;gap:8px;flex-wrap:wrap}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#fff;color:#111;padding:10px 18px;border-radius:8px;font-weight:600;opacity:0;transition:.25s;pointer-events:none}
+  .toast.on{opacity:1}
+  label.chk{display:flex;gap:6px;align-items:center;color:var(--mut);font-size:12px;text-transform:none;letter-spacing:0;cursor:pointer}
+  @media (max-width:1000px){main{grid-template-columns:1fr;height:auto}section{height:420px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Moderador <span>LIVE</span></div>
+  <input id="cuenta" placeholder="@cuenta_del_live" autocomplete="off">
+  <button class="pri" id="bCon">Conectar</button>
+  <button id="bDes" disabled>Desconectar</button>
+  <button id="bDemo" title="Comentarios de prueba para ver cómo funciona">Probar demo</button>
+  <span class="pill" id="pill"><span class="dot"></span><span id="pillTxt">Desconectado</span></span>
+  <div class="sp"></div>
+  <div class="tools">
+    <button id="bFiltro" title="Copia las palabras de riesgo bajo para pegarlas en el filtro de palabras de TikTok">Copiar filtro TikTok</button>
+    <button id="bEditar">Editar palabras</button>
+    <button id="bRecargar">Recargar palabras</button>
+    <button id="bReg">Descargar registro</button>
+    <button id="bSalir">Cerrar app</button>
+  </div>
+</header>
+<div class="msg" id="msg">Cargando…</div>
+<div class="stats">
+  <div class="stat"><b id="sCom">0</b><small>comentarios</small></div>
+  <div class="stat a"><b id="sSil">0</b><small>para silenciar</small></div>
+  <div class="stat r"><b id="sBlo">0</b><small>para bloquear</small></div>
+  <div class="stat"><b id="sUsu">0</b><small>usuarios marcados</small></div>
+  <div class="stat"><b id="sPal">0</b><small>palabras vigiladas</small></div>
+</div>
+<main>
+  <section>
+    <h2>Chat en vivo <label class="chk"><input type="checkbox" id="auto" checked style="width:auto">auto-scroll</label></h2>
+    <div class="lista" id="chat"><div class="vacio">Aquí aparece el chat cuando se conecten.</div></div>
+  </section>
+  <section>
+    <h2>Alertas <label class="chk"><input type="checkbox" id="sonido" checked style="width:auto">sonido en rojas</label></h2>
+    <div class="lista" id="alertas"><div class="vacio">Sin alertas por ahora 👌</div></div>
+  </section>
+  <section>
+    <h2>Usuarios para bloquear</h2>
+    <div class="lista" id="usuarios"><div class="vacio">Nadie marcado todavía.</div></div>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+let desde = 0, audio = null;
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function toast(t){ const el=$("toast"); el.textContent=t; el.classList.add("on"); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("on"),1800); }
+async function post(url, data){ const r = await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data||{})}); return r.json(); }
+function copiar(t){ navigator.clipboard.writeText(t).then(()=>toast("Copiado: "+(t.length>40?t.slice(0,40)+"…":t))).catch(()=>prompt("Copia esto:",t)); }
+
+function beep(){
+  if(!$("sonido").checked) return;
+  try{
+    audio = audio || new (window.AudioContext||window.webkitAudioContext)();
+    [0,0.18].forEach(d=>{ const o=audio.createOscillator(), g=audio.createGain();
+      o.frequency.value=1100; o.connect(g); g.connect(audio.destination);
+      g.gain.setValueAtTime(.15,audio.currentTime+d); g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d+.15);
+      o.start(audio.currentTime+d); o.stop(audio.currentTime+d+.16); });
+  }catch(e){}
+}
+
+function limpiarVacio(el){ const v = el.querySelector(".vacio"); if(v) v.remove(); }
+
+function pintarEvento(e){
+  const chat=$("chat"); limpiarVacio(chat);
+  const d=document.createElement("div"); d.className="c "+e.nivel;
+  d.innerHTML=`<span class="h">${e.hora}</span><span class="u">@${esc(e.usuario)}</span> ${esc(e.texto)}`;
+  chat.appendChild(d);
+  while(chat.children.length>400) chat.firstChild.remove();
+  if($("auto").checked) chat.scrollTop=chat.scrollHeight;
+
+  if(e.nivel==="normal") return;
+  const al=$("alertas"); limpiarVacio(al);
+  const a=document.createElement("div"); a.className="al "+e.nivel;
+  const etiqueta = e.nivel==="bloquear" ? "BLOQUEAR" : "SILENCIAR";
+  a.innerHTML=`<div class="top"><span><span class="tag">${etiqueta}</span> <span class="u" style="color:var(--azul);font-weight:600">@${esc(e.usuario)}</span>
+      <small style="color:var(--mut)">${esc(e.apodo)} · ${e.hora}${e.veces>1?` · vez #${e.veces}`:""}</small></span>
+      <button class="mini">Copiar @</button></div>
+    <div class="t">"${esc(e.texto)}"</div>
+    <div class="p">${esc(e.palabras.join(", "))} — ${esc(e.categorias.join(", ").replaceAll("_"," "))}</div>`;
+  a.querySelector("button").onclick=()=>copiar("@"+e.usuario);
+  al.prepend(a);
+  while(al.children.length>200) al.lastChild.remove();
+  if(e.nivel==="bloquear") beep();
+}
+
+function pintarUsuarios(us){
+  const el=$("usuarios");
+  if(!us.length){ el.innerHTML='<div class="vacio">Nadie marcado todavía.</div>'; return; }
+  el.innerHTML="";
+  us.forEach(u=>{
+    const d=document.createElement("div"); d.className="us"+(u.hecho?" hecho":"");
+    d.innerHTML=`<div class="n"><div><span style="color:var(--azul);font-weight:600">@${esc(u.usuario)}</span> <small>${esc(u.apodo)}</small></div>
+      <div><small>"${esc(u.ultimo)}"</small></div></div>
+      ${u.bloquear?`<span class="cnt r">${u.bloquear}</span>`:""}${u.silenciar?`<span class="cnt a">${u.silenciar}</span>`:""}
+      <button class="mini c1">Copiar</button><button class="mini c2" title="Marcar como ya bloqueado">${u.hecho?"↩":"✓"}</button>`;
+    d.querySelector(".c1").onclick=()=>copiar("@"+u.usuario);
+    d.querySelector(".c2").onclick=async()=>{ await post("/api/hecho",{usuario:u.usuario}); };
+    el.appendChild(d);
+  });
+}
+
+const textos={desconectado:"Desconectado",conectando:"Conectando…",conectado:"En vivo",error:"Error",demo:"Demo"};
+async function ciclo(){
+  try{
+    const r = await fetch("/api/estado?desde="+desde); const s = await r.json();
+    $("pill").className="pill "+s.conexion; $("pillTxt").textContent=textos[s.conexion]||s.conexion;
+    $("msg").textContent=s.mensaje; $("msg").className="msg"+(s.conexion==="error"?" error":"");
+    const activo = ["conectando","conectado","demo"].includes(s.conexion);
+    $("bCon").disabled=activo; $("bDemo").disabled=activo; $("bDes").disabled=!activo; $("cuenta").disabled=activo;
+    s.eventos.forEach(pintarEvento);
+    if(s.eventos.length) desde = s.eventos[s.eventos.length-1].id;
+    pintarUsuarios(s.usuarios);
+    const t=s.totales||{};
+    $("sCom").textContent=t.comentarios||0; $("sSil").textContent=t.silenciar||0; $("sBlo").textContent=t.bloquear||0;
+    $("sUsu").textContent=s.usuarios.length; $("sPal").textContent=s.palabras;
+  }catch(e){ $("msg").textContent="La aplicación se cerró. Ábrela de nuevo."; $("msg").className="msg error"; }
+  setTimeout(ciclo, 700);
+}
+
+function nuevaSesion(){ $("chat").innerHTML=""; $("alertas").innerHTML='<div class="vacio">Sin alertas por ahora 👌</div>'; }
+$("bCon").onclick=async()=>{ audio = audio || new (window.AudioContext||window.webkitAudioContext)();
+  const c=$("cuenta").value.trim(); try{localStorage.setItem("cuenta",c)}catch(e){}
+  nuevaSesion(); const r=await post("/api/conectar",{cuenta:c}); if(!r.ok) toast(r.error); };
+$("cuenta").onkeydown=e=>{ if(e.key==="Enter") $("bCon").click(); };
+$("bDes").onclick=()=>post("/api/desconectar");
+$("bDemo").onclick=async()=>{ audio = audio || new (window.AudioContext||window.webkitAudioContext)(); nuevaSesion(); const r=await post("/api/demo"); if(!r.ok) toast(r.error); };
+$("bFiltro").onclick=async()=>{ const r=await (await fetch("/api/filtro")).json(); copiar(r.palabras.join(", ")); toast(`${r.palabras.length} palabras copiadas. Pégalas en el filtro de TikTok`); };
+$("bEditar").onclick=async()=>{ const r=await post("/api/abrir-palabras"); if(!r.ok) toast(r.error); };
+$("bRecargar").onclick=async()=>{ const r=await post("/api/recargar"); toast(r.ok?`${r.palabras} palabras cargadas`:r.error); };
+$("bReg").onclick=()=>{ location.href="/api/registro"; };
+$("bSalir").onclick=async()=>{ if(confirm("¿Cerrar el moderador?")){ await post("/api/salir"); document.body.innerHTML='<p style="padding:40px;text-align:center;color:#8a91a1">Moderador cerrado. Puedes cerrar esta pestaña.</p>'; } };
+try{ $("cuenta").value = localStorage.getItem("cuenta") || ""; }catch(e){}
+ciclo();
+</script>
+</body>
+</html>

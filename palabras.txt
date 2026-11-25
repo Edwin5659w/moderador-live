@@ -1,0 +1,308 @@
+# ================================================================
+#  PALABRAS DE RIESGO — Moderador TikTok LIVE
+# ================================================================
+# Formato:  [categoria | nivel]   y debajo una palabra o frase por línea.
+#
+# Niveles:
+#   silenciar -> riesgo bajo. La gente lo escribe sin mala intención
+#                (ej. "apuesta"). Se oculta/silencia el comentario y ya.
+#   bloquear  -> riesgo alto. Ataques, acusaciones, odio, pedir reportes.
+#                Esto es lo que puede tumbar la cuenta. Bloquear al usuario.
+#
+# Reglas de escritura:
+#   - Sin tildes ni mayúsculas (el programa las ignora igual).
+#   - Una palabra también atrapa lo que empieza igual:
+#       "estafa" atrapa estafas, estafador, estafadores...
+#   - Palabras de 4 letras o menos se buscan exactas (evita falsos avisos).
+#   - Las frases se buscan completas.
+#   - El programa ya entiende trucos: 4PU3ST4, a.p.u.e.s.t.a, apuestaaaa.
+#   - Las líneas que empiezan con # no cuentan.
+#
+# Después de editar, dale "Recargar palabras" en la aplicación.
+# ================================================================
+
+
+# ---------------------- RIESGO BAJO: SILENCIAR ----------------------
+
+[apuestas | silenciar]
+apuesta
+apuesto
+apuestale
+apuestenle
+apostar
+aposte
+apostemos
+apostando
+apostador
+handicap
+hándicap
+cuota
+momio
+stake
+parlay
+parley
+combinada
+combinadas
+pick
+picks
+tipster
+fija
+fijas
+la fija
+pronostico seguro
+pick seguro
+over
+under
+mas de 2.5
+menos de 2.5
+ambos marcan
+doble oportunidad
+empate no apuesta
+ganador del partido
+marcador exacto
+resultado exacto
+cashout
+cash out
+bankroll
+unidades
+deposito
+depositar
+bono de bienvenida
+freebet
+free bet
+codigo promocional
+bet
+
+[casas_de_apuestas | silenciar]
+betplay
+wplay
+rushbet
+codere
+yajuego
+zamba
+sportium
+luckia
+betsson
+bet365
+1xbet
+betano
+bwin
+betfair
+pinnacle
+melbet
+megapari
+mostbet
+22bet
+stake.com
+caliente
+william hill
+casino
+tragamonedas
+ruleta
+slots
+
+[plata_y_promesas | silenciar]
+ganar plata
+ganar dinero
+plata facil
+dinero facil
+ganancia segura
+ganancias seguras
+100% seguro
+seguro gana
+gana seguro
+duplicar
+duplica tu plata
+multiplicar plata
+invertir
+inversion
+recuperar lo perdido
+nequi
+daviplata
+consignar
+consignacion
+transferir
+
+[contacto_externo | silenciar]
+whatsapp
+wasap
+wpp
+telegram
+escribeme
+escribanme
+al privado
+por privado
+link en
+mi perfil
+grupo vip
+canal vip
+vip
+
+
+# ---------------------- RIESGO ALTO: BLOQUEAR ----------------------
+
+[acusa_estafa | bloquear]
+estafa
+estafan
+estafador
+estafaron
+estafado
+fraude
+fraudulento
+scam
+fake
+timo
+timador
+tumbada
+tumbadores
+tumbando
+tumban a la gente
+robo
+roban
+robaron
+ladron
+ladrones
+rata
+ratas
+sacaplata
+saca plata
+sacadineros
+vendehumo
+vende humo
+vendiendo humo
+charlatan
+charlatanes
+mentiroso
+mentirosos
+mentira
+puro cuento
+engaño
+engañan
+engañando
+falso
+falsos
+me robaron
+perdi plata
+perdi mi plata
+perdi todo
+devuelvan la plata
+devuelvanme
+piramide
+
+[desprestigio | bloquear]
+eso no sirve
+esto no sirve
+la app no sirve
+app no sirve
+no sirve pa nada
+no sirve para nada
+no sirven pa nada
+no sirven para nada
+no funciona
+eso pa que
+pa que eso
+pa que sirve
+para que sirve eso
+pura paja
+puras pajas
+no le crean
+no les crean
+no crean
+no compren
+no paguen
+no descarguen
+no la descarguen
+no se dejen
+no caigan
+no caigan en eso
+que verguenza
+dan pena
+malisimo
+malisimos
+pesimo
+pesimos
+basura
+porqueria
+asco
+cierren eso
+cierren el live
+
+[pide_reportes | bloquear]
+reporten
+reportar
+reportemos
+reportenlo
+reportenla
+reportenlos
+reportalo
+reportado
+denuncien
+denunciar
+denunciemos
+denunciados
+baneen
+banearlos
+que los baneen
+tumben el live
+tumbemos el live
+que les cierren
+cierrenle la cuenta
+demanda
+demandar
+policia
+fiscalia
+sic
+
+[insultos | bloquear]
+hp
+hpta
+hijueputa
+hijueputas
+hijo de puta
+hijos de puta
+gonorrea
+gonorreas
+malparido
+malparidos
+carechimba
+care chimba
+caremonda
+care monda
+pirobo
+pirobos
+gurrupleta
+idiota
+idiotas
+imbecil
+imbeciles
+estupido
+estupidos
+pendejo
+pendejos
+lacra
+lacras
+sapo
+sapos
+payaso
+payasos
+mamerto
+perra
+perras
+puta
+putas
+
+[amenazas | bloquear]
+los voy a matar
+te voy a matar
+lo voy a matar
+matenlos
+mueranse
+muerase
+ojala se mueran
+se van a morir
+les voy a caer
+se las voy a cobrar
+se la voy a cobrar
+se donde vive
+se donde viven
+ya se donde
